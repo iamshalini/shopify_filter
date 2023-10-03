@@ -1,0 +1,277 @@
+<div class="pageSectionWrap">
+  <div class="wrapper  px-3 px-md-0">
+    
+    <div class="giftSetTab__Wrapper">
+      <ul class="trulyTab giftSetTab">
+         {%- for block in section.blocks -%}
+        <li class="trulyTab__link {% if forloop.index == 1 %}current {% endif %}" data-tab="tab-{{ forloop.index }}">
+         {% if block.settings.title != blank %}  <span class="giftSetTab__cntnt">{{ block.settings.title | strip_html  }}</span>  {% endif %}
+          <span class="giftSetTab__icon posRelative">
+            {% if block.settings.image != blank %}
+            <img
+              class="giftSetTab__imgBasic"
+              src="{{ block.settings.image | image_url }}"
+              alt="Holiday Gift Bundles"
+              width="90"
+            >
+              {% endif %}
+              {% if block.settings.image-hover != blank %}
+            <img
+              class="giftSetTab__imgHover"
+              src="{{ block.settings.image-hover| image_url }}"
+              alt="Holiday Gift Bundles"
+              width="90"
+            >
+                 {% endif %}
+          </span>
+        </li>
+       {% endfor %}     
+      </ul>
+
+      <div class="giftSetTab__container">
+          {%- for block in section.blocks -%}
+            {% assign variable =  forloop.index  %}
+        <div id="tab-{{ forloop.index }}" class="trulyTab__cntnt  {% if forloop.index == 1 %} current {% endif %}">
+          <div class="gridrow giftSetTab__products">
+      {% for product in block.settings.product_list limit:4  %}		
+       
+                      {% if product.selected_or_first_available_variant != blank %}
+              <div
+                id="{%if forloop.index == 3 %}{{ variable }}{% endif %}"
+                class="{%if forloop.index == 3 %}column-12 column-md-12 column-lg-3  {% else %}column-6 column-md-6 column-lg-3 {% endif %}{% if product.tags contains 'hide_product' %} d-none {% endif %}"
+              >
+              <div class="productBox__outer">
+                  {% render 'productGrid', product:product, cartbutton:'yes' %}
+                </div>
+               
+              </div>
+            {% endif %}
+            {% endfor %}
+
+
+             <div id="{{ forloop.index | plus:4 }}" class="column-6 column-md-6 column-lg-9">
+              <div class="PlayVideoBox TabVideo h100">
+                <video
+                  loop="true"
+                  webkit-playsinline=""
+                  playsinline=""
+                  autoplay=""
+                  controlslist="nodownload"
+                  muted=""
+                  class="PlayTargetVideo d-block banner-gift-guide"
+                  width="100%"
+                  poster="{{ block.settings.Video-poster | image_url }}"
+                >
+                  <source
+                    src="{{ block.settings.Video-url }}"
+                    type="video/mp4"
+                  >
+                  Your browser does not support the video tag.
+                </video>
+                <button id="videoplayBtn" class="playpauseBtn active" tabindex="0">
+                  <img
+                    src="https://cdn.shopify.com/s/files/1/0053/4462/4675/files/play__button.svg?v=1621433193"
+                    alt=""
+                    class="playBtn"
+                  >
+                  <img
+                    src="https://cdn.shopify.com/s/files/1/0053/4462/4675/files/pause__icon.svg?v=1621433193"
+                    alt=""
+                    class="pausebtn"
+                  >
+                </button>
+              </div>
+            </div>  
+
+            {% for product in block.settings.product_list offset:4 %}
+             <div class=" column-6 column-md-6 column-lg-3 {% if product.tags contains 'hide_product' %} d-none {% endif %}">
+                <div class="productBox__outer">
+                  {% render 'productGrid', product:product, cartbutton:'yes' %}
+                </div>
+            </div>
+            {% endfor %}
+
+            
+          </div>
+        
+        </div>
+{% endfor %}
+
+  <div class="gridrow">
+            <div class="column-12">
+              <div class="gridrow notsureSection mb-md-5 py-5">
+                <div class="column-12 column-md-6">
+                  {% if section.settings.sure-img != blank %}
+                  <div class="notsureSection__img">
+                    <img
+                      src="{{ section.settings.sure-img | image_url }}"
+                      alt=""
+                    >
+                  </div>
+                    {% endif %}
+                </div>
+                <div class="column-12 column-md-6  d-flex alignCenter">
+                  <div class="notsureSection__info">
+                      {% if  section.settings.sure-icon != blank %}
+                    <img
+                      src="{{ section.settings.sure-icon | image_url }}"
+                      width="65"
+                      alt=""
+                    >
+                      {% endif %}
+                     {{  section.settings.title-sure  }} 
+                    <p>{{ section.settings.des-sure | strip_html }}</p>
+
+                    <a
+                      href="{{  section.settings.btn-link }}"
+                      class="common-btn common-btn-round common-btn-black textUppercase regular mt-0"
+                      type="submit"
+                      >{{  section.settings.btn-text | strip_html }}</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      </div>
+      
+ 
+               
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Gift sets",
+    "settings": [
+      {
+      "type": "header",
+      "content": "Not Sure Section"
+      },
+        {
+          "type": "image_picker",
+          "id": "sure-img",
+           "label": "Image"
+      },
+       {
+          "type": "image_picker",
+          "id": "sure-icon",
+           "label": "Icon"
+      },
+        {
+          "type": "richtext",
+          "id": "title-sure",
+          "label":  "Heading"
+          },  
+         {
+          "type": "richtext",
+          "id": "des-sure",
+          "label":  "Description"
+          },  
+           {
+          "type": "text",
+          "id": "btn-text",
+          "label":  "Button"
+          },
+          {
+          "type": "url",
+          "id": "btn-link",
+          "label":  "Button URL"
+          }
+    ],
+    "max_blocks": 4,
+      "blocks": [
+      {
+        "type": "text",
+        "name":"Tab",
+        "settings": [
+           {
+          "type": "richtext",
+          "id": "title",
+          "label":  "Heading"
+          },
+          {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Icon"
+        }, 
+           {
+        "type": "image_picker",
+        "id": "image-hover",
+        "label": "Icon Hover"
+        }, 
+          {
+        "type": "product_list",
+        "id": "product_list",
+        "label": "Products",
+         "limit": 5
+        },        
+        {
+          "type": "text",
+          "id": "Video-url",
+           "label": "Video url"
+      },
+          {
+          "type": "image_picker",
+          "id": "Video-poster",
+           "label": "Video Poster"
+      }
+        ]
+      }
+    ],
+    "presets" : [
+      {
+        "name" : "Gift sets",
+        "category" : "Gift sets"
+      }
+    ]
+  }
+{% endschema %}
+
+{% javascript %}
+  (function($){
+      $(document).ready(function () {
+console.log('gift-sets');
+   if ($(window).width() <= 989) {
+
+          function replaceContent(x, z){
+          // save the inner html of the first node in temp
+          let temp = document.getElementById(x).innerHTML;
+          // move the innerHtml of the second node into first node
+          document.getElementById(x).innerHTML = document.getElementById(z).innerHTML;
+          // replace the second node's inner html with temp (saved previously)
+          document.getElementById(z).innerHTML = temp;
+          }
+
+          // replace the divs of id 2 and 4
+          replaceContent("1", "5");
+          replaceContent("2", "6");
+          replaceContent("3", "7");
+          replaceContent("4", "8");
+          // replaceContent("gift-products-9", "gift-products-10");
+
+      }
+
+          // Only One video At a time
+        $('.trulyTab li').click(function () {
+          var tab_id = $(this).attr('data-tab');
+           // for video paly on tabs
+
+          $("#" + tab_id).find('video').get(0).play()
+          $("#" + tab_id).siblings().find('video').get(0).pause()
+          $("#" + tab_id).find('.TabVideo').find('.playpauseBtn').addClass('active')
+
+
+      });
+          // Only One video At a time
+    function videoPlay() {
+          $(".trulyTab__cntnt.current").find('video').get(0).play()
+      }
+      videoPlay()
+   });
+     
+    })(jQuery); 
+{% endjavascript %}
